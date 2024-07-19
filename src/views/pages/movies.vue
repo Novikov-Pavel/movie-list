@@ -7,7 +7,7 @@
       v-for="movie in movies"
       :key="movie.name"
     />
-    {{ movies }}
+    <Paginator :rows="10" :totalRecords="maxMovies" />
   </div>
 </template>
 
@@ -24,10 +24,11 @@ store.setMovies(isLocalMoviews.value || []);
 
 const movies = ref(store.movies);
 const first = ref<number>(1);
+const maxMovies = ref<number>(250);
 
 onMounted(async () => {
   if (!isLocalMoviews.value) {
-    const res = await fetchData(String(first.value));
+    const res = await fetchData(String(first.value), String(maxMovies.value));
     localStorage.setItem("movies", JSON.stringify(res));
   } else
     isLocalMoviews.value = JSON.parse(localStorage.getItem("movies") || "");

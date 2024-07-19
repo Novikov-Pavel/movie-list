@@ -52,7 +52,7 @@ export interface moviesI {
   docs?: docsI[];
 }
 
-export async function fetchData(page: string, limit: string = "250") {
+export async function fetchData(page: string, limit: string) {
   try {
     const { data }: AxiosResponse<moviesI> = await axiosInstance.get("movie", {
       params: {
