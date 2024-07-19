@@ -1,0 +1,7 @@
+{
+  "MAIN_PAGE": "/",
+  "MOVIES": "/movies",
+  "MOVIE_ID": "id",
+  "ROOT_COMPONENT": "",
+  "NOT_FOUND": "/404"
+}
