@@ -1,29 +1,57 @@
 <template>
-  <h2>Список фильмов из Кинопоиска</h2>
-  <Card style="width: 25rem; overflow: hidden">
-    <template #header>
-      <img alt="user header" src="" />
-    </template>
-    <template #title>Advanced Card</template>
-    <template #subtitle>Card subtitle</template>
-    <template #content>
-      <p class="m-0">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed
-        consequuntur error repudiandae numquam deserunt quisquam repellat libero
-        asperiores earum nam nobis, culpa ratione quam perferendis esse,
-        cupiditate neque quas!
-      </p>
-    </template>
-    <template #footer>
-      <div class="flex gap-4 mt-1">
-        <Button label="Cancel" severity="secondary" outlined class="w-full" />
-        <Button label="Save" class="w-full" />
-      </div>
-    </template>
-  </Card>
+  <h2 class="title">Список фильмов из Кинопоиска</h2>
+  <div class="movies">
+    <Movie
+      v-model:first="first"
+      :movie="movie"
+      v-for="movie in movies"
+      :key="movie.name"
+    />
+    {{ movies }}
+  </div>
 </template>
 
 <script setup lang="ts">
-import Card from "primevue/card";
-import Button from "primevue/button";
+import { onMounted, ref } from "vue";
+import Movie from "@/views/components/movie.vue";
+import { fetchData, docsI } from "@/API/auth";
+import { useMovieStore } from "@/store/movieStore";
+
+const store = useMovieStore();
+const isLocalMoviews = ref<Array<docsI>>();
+
+store.setMovies(isLocalMoviews.value || []);
+
+const movies = ref(store.movies);
+const first = ref<number>(1);
+
+onMounted(async () => {
+  if (!isLocalMoviews.value) {
+    const res = await fetchData(String(first.value));
+    localStorage.setItem("movies", JSON.stringify(res));
+  } else
+    isLocalMoviews.value = JSON.parse(localStorage.getItem("movies") || "");
+});
 </script>
+
+<style lang="scss">
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.movies {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.p-card {
+  text-align: center;
+}
+
+.p-card-header {
+  width: 250px;
+  margin: 0 auto;
+}
+</style>
