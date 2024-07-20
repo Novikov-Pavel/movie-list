@@ -21,11 +21,11 @@ const routes: RouteRecordRaw[] = [
         name: MOVIES,
         component: Movies,
       },
-      // {
-      //   path: MOVIES + "/:" + MOVIE_ID,
-      //   name: MOVIE_ID,
-      //   component: () => import("../views/Movie/MovieView.vue"),
-      // },
+      {
+        path: MOVIES + "/:" + MOVIE_ID,
+        name: MOVIE_ID,
+        component: () => import("@/views/components/movie.vue"),
+      },
     ],
   },
   // {

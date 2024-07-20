@@ -1,37 +1,39 @@
 <template>
   <h2 class="title">Список фильмов из Кинопоиска</h2>
   <div class="movies">
-    <Movie
-      v-model:first="first"
-      :movie="movie"
-      v-for="movie in movies"
-      :key="movie.name"
-    />
-    <Paginator :rows="10" :totalRecords="maxMovies" />
+    <Movie :movie="movie" v-for="movie in movies" :key="movie.name" />
+    <Paginator :rows="1" :totalRecords="maxMovies" v-model:first="first" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import Movie from "@/views/components/movie.vue";
 import { fetchData, docsI } from "@/API/auth";
 import { useMovieStore } from "@/store/movieStore";
+import { watchEffect } from "vue";
+import Paginator from "primevue/paginator";
 
 const store = useMovieStore();
 const isLocalMoviews = ref<Array<docsI>>();
 
-store.setMovies(isLocalMoviews.value || []);
-
-const movies = ref(store.movies);
-const first = ref<number>(1);
+const movies = computed(() => store.movies);
+const first = ref<number>(0);
 const maxMovies = ref<number>(250);
 
 onMounted(async () => {
-  if (!isLocalMoviews.value) {
-    const res = await fetchData(String(first.value), String(maxMovies.value));
+  if (!localStorage.getItem("movies")) {
+    const res = await fetchData(
+      String(first.value + 1),
+      String(maxMovies.value)
+    );
     localStorage.setItem("movies", JSON.stringify(res));
   } else
     isLocalMoviews.value = JSON.parse(localStorage.getItem("movies") || "");
+});
+
+watchEffect(() => {
+  store.setMovies(isLocalMoviews.value);
 });
 </script>
 

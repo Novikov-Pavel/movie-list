@@ -12,44 +12,44 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 interface contriesMovie {
-  name?: string;
+  name: string;
 }
 interface genresMovie {
-  name?: string;
+  name: string;
 }
 interface ratingI {
-  await?: number;
-  filmCritics?: number;
-  imdb?: number;
-  kp?: number;
-  russianFilmCritics?: number;
+  await: number;
+  filmCritics: number;
+  imdb: number;
+  kp: number;
+  russianFilmCritics: number;
 }
 
 export interface docsI {
-  ageRating?: number;
-  alternativeName?: string;
-  countries?: contriesMovie[];
-  description?: string;
-  enName?: string;
-  genres?: genresMovie[];
-  id?: number;
-  isSeries?: boolean;
-  movieLength?: number;
-  name?: string;
-  rating?: ratingI;
-  status?: string;
-  ticketsOnSale?: boolean;
-  type?: string;
-  typeNumber?: number;
-  year?: number;
-  poster?: {
-    url?: string;
-    previewUrl?: string;
+  ageRating: number;
+  alternativeName: string;
+  countries: contriesMovie[];
+  description: string;
+  enName: string;
+  genres: genresMovie[];
+  id: number;
+  isSeries: boolean;
+  movieLength: number;
+  name: string;
+  rating: ratingI;
+  status: string;
+  ticketsOnSale: boolean;
+  type: string;
+  typeNumber: number;
+  year: number;
+  poster: {
+    url: string;
+    previewUrl: string;
   };
 }
 
 export interface moviesI {
-  docs?: docsI[];
+  docs: docsI[];
 }
 
 export async function fetchData(page: string, limit: string) {

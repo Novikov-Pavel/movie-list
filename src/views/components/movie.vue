@@ -7,31 +7,110 @@
         alt="Лого фильма"
         width="250"
         height="300px"
+        @click="$router.push({ name: MOVIE_ID, params: { id: movie?.id } })"
       />
       <Skeleton v-else width="250px" height="300px" />
     </template>
-    <template #title>{{ movie?.name }} {{ movie?.year }}</template>
-    <template #subtitle>Рейтинг КП {{ movie?.rating?.kp }}</template>
+    <template #title>
+      <Inplace
+        closable
+        :disabled="!isEdit"
+        @close="isEdit = false"
+      >
+        <template #display> {{ name }} {{ year }} </template>
+        <template #content>
+          <InputText v-model="name" autofocus />
+          <InputText v-model="year" autofocus />
+        </template>
+        <template #closeicon>
+          <i class="pi pi-check" />
+        </template>
+      </Inplace>
+    </template>
+    <template #subtitle>
+      <Inplace closable :disabled="!isEdit" @close="isEdit = false">
+        <template #display> Рейтинг КП {{ ratingKp }} </template>
+        <template #content>
+          <InputText v-model="ratingKp" autofocus />
+        </template>
+        <template #closeicon>
+          <i class="pi pi-check" />
+        </template>
+      </Inplace>
+    </template>
     <template #footer>
+      <Toast />
+      <ConfirmPopup />
       <div class="buttons">
-        <Button label="Редактировать" />
-        <Button label="Удалить" outlined />
+        <Button label="Редактировать" @click.stop="isEdit = !isEdit" />
+        <Button
+          @click="removeMovie($event, movie.id)"
+          label="Удалить"
+          severity="danger"
+          outlined
+        />
       </div>
     </template>
   </Card>
-
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { docsI } from "@/API/auth";
 import Card from "primevue/card";
 import Button from "primevue/button";
 import Image from "primevue/image";
 import Skeleton from "primevue/skeleton";
+import Inplace from "primevue/inplace";
+import { useMovieStore } from "@/store/movieStore";
+import { MOVIE_ID } from "@/router/routes.json";
+import InputText from "primevue/inputtext";
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "primevue/usetoast";
+import ConfirmPopup from "primevue/confirmpopup";
+import Toast from "primevue/toast";
 
-defineProps<{
+const props = defineProps<{
   movie: docsI;
 }>();
+
+const isEdit = ref<boolean>(false);
+
+const ratingKp = ref(props.movie?.rating?.kp);
+const name = ref(props.movie?.name);
+const year = ref(props.movie?.year);
+
+const store = useMovieStore();
+
+const confirm = useConfirm();
+const toast = useToast();
+
+const removeMovie = (event, id: number) => {
+  confirm.require({
+    target: event.target,
+    message: "Хотите удалить этот фильм?",
+    icon: "pi pi-info-circle",
+    rejectClass: "p-button-secondary p-button-outlined p-button-sm",
+    acceptClass: "p-button-danger p-button-sm",
+    rejectLabel: "Отмена",
+    acceptLabel: "Удалить",
+    accept: () => {
+      store.setMovies(store.movies?.filter((e) => e?.id !== id));
+      toast.add({
+        severity: "info",
+        detail: "Фильм удалён",
+        life: 3000,
+      });
+    },
+    reject: () => {
+      toast.add({
+        severity: "error",
+        detail: "Вы отменили удаление",
+        life: 3000,
+      });
+    },
+  });
+};
 </script>
 
 <style lang="scss">
@@ -40,5 +119,10 @@ defineProps<{
   justify-content: center;
   align-items: center;
   gap: 10px;
+}
+.p-inplace-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
