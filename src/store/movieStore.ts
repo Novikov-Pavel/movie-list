@@ -5,7 +5,7 @@ import { ref } from "vue";
 export const useMovieStore = defineStore("movies", () => {
   const movies = ref<Array<docsI>>();
 
-  const setMovies = (newMovies: Array<docsI>) => {
+  const setMovies = (newMovies: Array<docsI> | undefined) => {
     movies.value = newMovies;
   };
 

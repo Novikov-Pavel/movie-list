@@ -36,7 +36,7 @@ export interface docsI {
   isSeries: boolean;
   movieLength: number;
   name: string;
-  rating: ratingI;
+  rating?: ratingI;
   status: string;
   ticketsOnSale: boolean;
   type: string;

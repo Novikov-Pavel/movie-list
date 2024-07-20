@@ -1,5 +1,5 @@
 <template>
-  <Card style="width: 25rem; overflow: hidden" v-if="movie?.name">
+  <Card style="width: 25rem; overflow: hidden">
     <template #header>
       <div @click="$router.push({ name: MOVIE_ID, params: { id: movie?.id } })">
         <Image
@@ -82,9 +82,9 @@ const store = useMovieStore();
 const confirm = useConfirm();
 const toast = useToast();
 
-const removeMovie = (event, id: number) => {
+const removeMovie = (event: Event, id: number) => {
   confirm.require({
-    target: event.target,
+    target: event.currentTarget,
     message: "Хотите удалить этот фильм?",
     icon: "pi pi-info-circle",
     rejectClass: "p-button-secondary p-button-outlined p-button-sm",
@@ -92,7 +92,7 @@ const removeMovie = (event, id: number) => {
     rejectLabel: "Отмена",
     acceptLabel: "Удалить",
     accept: () => {
-      store.setMovies(store.movies?.filter((e) => e?.id !== id));
+      store.setMovies(store.movies?.filter((e) => e?.id !== id) as Array<docsI>);
       toast.add({
         severity: "info",
         detail: "Фильм удалён",
@@ -110,7 +110,7 @@ const removeMovie = (event, id: number) => {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .buttons {
   display: flex;
   justify-content: center;
