@@ -1,8 +1,12 @@
 <template>
   <h2 class="title">Список фильмов из Кинопоиска</h2>
   <div class="movies">
-    <Movie :movie="movie" v-for="movie in movies" :key="movie.name" />
-    <Paginator :rows="1" :totalRecords="maxMovies" v-model:first="first" />
+    <Movie
+      :movie="movie"
+      v-for="movie in pagination(movies as Array<docsI>)"
+      :key="movie.name"
+    />
+    <Paginator :rows="rows" :totalRecords="250" v-model:first="first" />
   </div>
 </template>
 
@@ -19,7 +23,14 @@ const isLocalMoviews = ref<Array<docsI>>();
 
 const movies = computed(() => store.movies);
 const first = ref<number>(0);
-const maxMovies = ref<number>(250);
+const rows = ref<number>(10);
+const maxMovies = ref<number>(movies.value?.length);
+
+const pagination = (movies: Array<docsI>) => {
+  const start = first.value,
+    end = start + rows.value;
+  return movies?.slice(start, end);
+};
 
 onMounted(async () => {
   if (!localStorage.getItem("movies")) {

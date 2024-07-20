@@ -1,22 +1,19 @@
 <template>
   <Card style="width: 25rem; overflow: hidden" v-if="movie?.name">
     <template #header>
-      <Image
-        v-if="movie?.poster?.previewUrl"
-        :src="movie?.poster?.previewUrl"
-        alt="Лого фильма"
-        width="250"
-        height="300px"
-        @click="$router.push({ name: MOVIE_ID, params: { id: movie?.id } })"
-      />
-      <Skeleton v-else width="250px" height="300px" />
+      <div @click="$router.push({ name: MOVIE_ID, params: { id: movie?.id } })">
+        <Image
+          v-if="movie?.poster?.previewUrl"
+          :src="movie?.poster?.previewUrl"
+          alt="Лого фильма"
+          width="250"
+          height="300px"
+        />
+        <Skeleton v-else width="250px" height="300px" />
+      </div>
     </template>
     <template #title>
-      <Inplace
-        closable
-        :disabled="!isEdit"
-        @close="isEdit = false"
-      >
+      <Inplace closable :disabled="!isEdit" @close="isEdit = false">
         <template #display> {{ name }} {{ year }} </template>
         <template #content>
           <InputText v-model="name" autofocus />
